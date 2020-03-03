@@ -22,11 +22,6 @@ class SensitiveWordFilter
 	private static $aSensitiveTree = [];
 
 	/**
-	 * @var array 敏感词汇树
-	 */
-	private static $sFilePath = './Resource/SensitiveWords.txt';
-
-	/**
 	 * SensitiveWordFilter constructor. 构造函数
 	 *
 	 * @param string $sSymbol
@@ -72,12 +67,12 @@ class SensitiveWordFilter
 	 *  ]
 	 *
 	 * @param string $sFilePath 敏感词库文件路径
+	 *
+	 * @throws \Exception
 	 */
-	public static function addSensitiveWords( string $sFilePath = '' )
+	public static function addSensitiveWords( string $sFilePath)
 	: void
 	{
-		$sFilePath = empty($sFilePath) ? self::$sFilePath : $sFilePath;
-
 		foreach ( self::readFile($sFilePath) as $sWords ) {
 			$iLen     = mb_strlen($sWords);
 			$aTreeArr = &self::$aSensitiveTree;
@@ -198,17 +193,30 @@ class SensitiveWordFilter
 	 * @param string $sFilePath
 	 *
 	 * @return Generator
+	 * @throws \Exception
 	 */
 	private static function readFile( string $sFilePath )
 	: Generator
 	{
-		$oHandle = fopen($sFilePath, 'r');
-
-		while (!feof($oHandle)) {
-			yield trim(fgets($oHandle));
+		if(empty($sFilePath)){
+			throw new \Exception("敏感词库文件不能为空");
 		}
 
-		fclose($oHandle);
+		try{
+			$oHandle = fopen($sFilePath, 'r');
+
+			if(empty($oHandle)){
+				throw new \Exception('open file fail~');
+			}
+
+			while (!feof($oHandle)) {
+				yield trim(fgets($oHandle));
+			}
+
+			fclose($oHandle);
+		} catch (\Exception $exception) {
+			echo $exception->getMessage();die;
+		}
 	}
 
 	/**

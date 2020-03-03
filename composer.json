@@ -1,0 +1,19 @@
+{
+    "name": "ppn/sensitive",
+    "description": "filter sensitive word",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "NiuJunQing",
+            "email": "junqing.niu@leapoon.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Sensitive\\": "src/Sensitive"
+        }
+    }
+}
